@@ -25,9 +25,6 @@ pub fn timer_loop(freq: f32, time: f32) {
     // Vector to record all loop start times
     let mut start_times = Vec::new();
 
-    // Vector to record how each loop lasted before going to sleep
-    let mut durations = Vec::new();
-
     for _i in 0..iterations {
         // Start a timer at the beggining of the loop
         let start = SystemTime::now();
@@ -42,7 +39,6 @@ pub fn timer_loop(freq: f32, time: f32) {
 
         // Time elapsed since loop began
         let elapsed = start.elapsed().expect("time went backwards!").as_nanos() as u64;
-        durations.push(elapsed as u64);
 
         // sleep if the loop executed faster than requested cadance
         if elapsed < period {
@@ -54,8 +50,4 @@ pub fn timer_loop(freq: f32, time: f32) {
     // write the start times vector to a file by converting to string first
     let write_strings: Vec<String> = start_times.iter().map(|n| n.to_string()).collect();
     fs::write("start_times", write_strings.join(", ")).expect("Unable to write file");
-
-    // write the durations vector to a file by converting to string first
-    let write_strings: Vec<String> = durations.iter().map(|n| n.to_string()).collect();
-    fs::write("durations", write_strings.join(", ")).expect("Unable to write file");
 }
